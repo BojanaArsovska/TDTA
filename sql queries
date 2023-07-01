@@ -25,12 +25,6 @@ CREATE TABLE file_author_contrib(id INTEGER PRIMARY KEY,
                     contrib_percent INT)
 
 
-UPDATE file_author_contrib SET file_author_contrib.file_name = (SELECT SUM(changes) AS SCORE FROM commits GROUP BY files)
-FROM commits
-WHERE file_author_contrib.file_name = file_author_contrib.file_name;
-
-
-CREATE TABLE tot_churn AS SELECT file_name, SUM(changes) AS SCORE FROM commits GROUP BY file_name;
 
 SELECT file_name, SUM(changes) AS SCORE FROM commits GROUP BY author, file_name order by COUNT Desc;
 
@@ -66,48 +60,6 @@ INSERT INTO file_author_contrib (total_churn)
 SELECT total_churn
 FROM file_churn
 where file_author_contrib.file_name = file_churn.file_name;
-
-
-CREATE TABLE file_churn (
-  file_name TXT,
-  total_churn INT
-);
-
-UPDATE file_author_contrib
-SET file_author_contrib.total_churn = file_churn.total_churn
-FROM file_churn
-WHERE file_name = file_churn.file_name;
-
-
-UPDATE file_author_contrib
-SET total_churn = (
-  SELECT total_churn
-  FROM file_churn
-  WHERE file_author_contrib.file_name = file_churn.file_name
-);
-
-
-
-
-
-UPDATE file_author_contrib
-SET total_churn = (
-    SELECT SUM(auth_churn)
-    FROM file_author_contrib
-    GROUP BY file_name
-    HAVING file_name = file_author_contrib.file_name
-);
-
-
-UPDATE file_author_contrib
-SET contrib_percent = (
-  SELECT ((auth_churn)* 100/ (total_churn))
-  FROM file_author_contrib
-
-);
-
-
-
 
 UPDATE file_author_contrib SET percentages = CAST(auth_churn AS float) / CAST(total_churn AS float);
 

@@ -14,12 +14,7 @@ def create_connection(db_file):
         if conn:
             conn.close()
 
-def create_and_init_db():
-    create_connection(r"db_commits_files.db")
-    conn = sqlite3.connect('db_commits_files.db')
-    cursor = conn.cursor()
-
-    # Create the table if it doesn't exist
+def create_commits_db(cursor):
     cursor.execute('''CREATE TABLE IF NOT EXISTS commits 
                     (id INTEGER PRIMARY KEY,
                     sha TEXT,
@@ -27,40 +22,42 @@ def create_and_init_db():
                     file_name TEXT,
                     author TEXT,
                     changes INT,
-                    complexity INT,
-                    nloc INT
-                    );'''
+                    nloc INT);'''
                    )
 
-def create_file_legacy_complexity_table():
-    create_connection(r"db_commits_files.db")
-    conn = sqlite3.connect('db_commits_files.db')
-    cursor = conn.cursor()
-
-    # Create the table if it doesn't exist
+def create_file_legacy_complexity_table(cursor):
     cursor.execute('''CREATE TABLE IF NOT EXISTS file_legacy_complexity(id INTEGER PRIMARY KEY,
                     file_name TEXT,
                     legacy_percentage FLOAT,
                     cog_complexity FLOAT);'''
                    )
 
-def create_auth_db():
+def create_file_auth_contrib(cursor):
+    cursor.execute('''CREATE TABLE IF NOT EXISTS file_author_contrib(id INTEGER PRIMARY KEY,
+                    file_name TEXT,
+                    author TEXT,
+                    auth_churn INT, 
+                    total_churn	INT,
+                    file_size INT,
+                    file_size_x_percentages	FLOAT,
+                    percentages	FLOAT,
+                    total_churn_tool FLOAT);'''
+                   )
+
+def create_auth_contib(cursor):
+    cursor.execute('''CREATE TABLE IF NOT EXISTS auth_contib
+                    (author TEXT,
+                    file_name TEXT,
+                    all_files FLOAT);'''
+                   )
+
+
+def create_and_init_db():
     create_connection(r"db_commits_files.db")
     conn = sqlite3.connect('db_commits_files.db')
     cursor = conn.cursor()
 
-    # Create the table if it doesn't exist
-    cursor.execute('''CREATE TABLE IF NOT EXISTS auth_contib
-                    (id INTEGER PRIMARY KEY,
-                    author TEXT,
-                    file_name TEXT,
-                    changes INT, 
-                    contribution_count INT
-                    );'''
-                   )
-
-# create_and_init_db()
-#
-# create_auth_db()
-#
-# create_file_legacy_complexity_table()
+    create_commits_db(cursor)
+    create_file_legacy_complexity_table(cursor)
+    create_file_auth_contrib(cursor)
+    create_auth_contib(cursor)

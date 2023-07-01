@@ -1,39 +1,38 @@
 from itertools import islice
 import sys
 import git
-import sqlite3
 from datetime import datetime
-import sqlite3
 from create_sql_db import *
-from renamed_files import *
+# from renamed_files import *
 from pydriller import *
 from pydriller.metrics.process.code_churn import CodeChurn
 import read_args_terminal
+import calc_gone_author_contributions as calc_gone_author_contributions
+import subprocess
+import os
 
+# TODO: REMOVE THIS IF EVERYTHING WORKS
 # clonning the directory
 # repo_url = "https://github.com/jenkinsci/jenkins.git"
 # repo = git.Repo.clone_from(repo_url, "jenkins")
 
-# stdoutOrigin=sys.stdout
-# sys.stdout = open("output_logs_renaming.txt", "w")
-
-local_repo_path = "/Users/bojanaarsovska/TDtool/jenkins"
-repo = git.Repo(local_repo_path)
-list_renamed = dict()
-list_test = list()
-
-# create database
-# create_and_init_db()
+ROOT_DIRECTORY = (subprocess.run('pwd', shell=True, capture_output=True, text=True)).stdout
+local_repo_path, gone_authors = read_args_terminal.read_args_terminal()
 
 # connect to database
 conn = sqlite3.connect('db_commits_files.db')
 cursor = conn.cursor()
 
+# create database
+# create_and_init_db()
 
 # open the local repository
 repo = git.Repo(local_repo_path)
-commits = islice(Repository(local_repo_path).traverse_commits(),3000)
-not_found_files = list()
+# commits = islice(Repository(local_repo_path).traverse_commits(),3000)
+
+# THIS COULD BE A FORMAT PROBLEM
+commits = Repository(local_repo_path).traverse_commits()
+# not_found_files = list()
 
 
 
@@ -45,7 +44,6 @@ def cal_code_churn(commit_sha, file_name):
 
         files_count = metric.count()
         return files_count[file_name]
-
     except:
         print(file_name)
         return 0
@@ -58,11 +56,11 @@ def update_table_commits():
                 cursor.execute('UPDATE commits SET file_name = "s%s" WHERE file_name = "s%s";' %(com_element.new_path, com_element.old_path))
             else:
                 if com_element.new_path is not None:
-                    cursor.execute("INSERT INTO commits (sha, date, file_name, author, changes, complexity, nloc) VALUES (?,?,?,?,?,?,?)",
-                               (_commit.hash, _commit.committer_date, com_element.new_path, _commit.author.name, cal_code_churn(_commit.hash,com_element.new_path), com_element.complexity, com_element.nloc))
+                    cursor.execute("INSERT INTO commits (sha, date, file_name, author, changes, nloc) VALUES (?,?,?,?,?,?)",
+                               (_commit.hash, _commit.committer_date, com_element.new_path, _commit.author.name, cal_code_churn(_commit.hash,com_element.new_path), com_element.nloc))
                 else:
-                    cursor.execute("INSERT INTO commits (sha, date, file_name, author, changes, complexity, nloc) VALUES (?,?,?,?,?,?,?)",
-                               (_commit.hash, _commit.committer_date, com_element.old_path, _commit.author.name, cal_code_churn(_commit.hash,com_element.old_path), com_element.complexity, com_element.nloc))
+                    cursor.execute("INSERT INTO commits (sha, date, file_name, author, changes, nloc) VALUES (?,?,?,?,?,?)",
+                               (_commit.hash, _commit.committer_date, com_element.old_path, _commit.author.name, cal_code_churn(_commit.hash,com_element.old_path), com_element.nloc))
 
 
             conn.commit()
@@ -96,11 +94,9 @@ def update_total_code_churn():
             # not_found_files.append(file)
             # print(file)
 
-update_total_code_churn()
+# update_total_code_churn()
 
-
-
-
+calc_gone_author_contributions.find_all_files(ROOT_DIRECTORY, gone_authors)
 conn.close()
 
 
