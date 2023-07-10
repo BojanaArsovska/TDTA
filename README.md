@@ -83,3 +83,74 @@ PMD has plugins available for various IDEs like Eclipse, IntelliJ IDEA, NetBeans
 Now, you're all set to use PMD and PyDriller for code analysis!
 ```
 Remember to replace the placeholders like `/path/to/your/pmd/bin` with the actual paths on your system.
+
+
+
+Sure, here is how the information can be added to the document.
+
+```markdown
+## Database Tables for the Tool
+
+The tool creates the following tables in the database:
+
+### Commits
+
+This table contains a row for each `file_name` in a single commit. By default, total churn is calculated as added lines - deleted lines, hence it can sometimes be negative. 
+
+| Column | Type | Description |
+| --- | --- | --- |
+| id | INTEGER | Primary key for the table |
+| sha | TEXT | The commit SHA |
+| date | TIMESTAMP | The date of the commit |
+| file_name | TEXT | The name of the file |
+| author | TEXT | The author of the commit |
+| changes | INT | The changes made in the commit (number of lines added or deleted) |
+| nloc | INT | Number of lines of code in the file |
+
+For each file in a commit in the repo, an entry in the table is created. This entry stores the file name and the commit specifications (sha, date, author), as well as file edits in that commit: lines added/removed. Moreover, it stores the number of lines of code in the file.
+
+### File_author_contrib
+
+This table stores the contributions of each author in this file.
+
+| Column | Type | Description |
+| --- | --- | --- |
+| id | INTEGER | Primary key for the table |
+| file_name | TEXT | The name of the file |
+| author | TEXT | The author of the commit |
+| auth_churn | INT | The number of lines that the author has contributed towards the code churn of this file |
+| total_churn | INT | Total lines of code churn in the file |
+| file_size | INT | The size of the file |
+| file_size_x_percentages | FLOAT | The file size multiplied by the percentage contribution of the author |
+| percentages | FLOAT | The percentage of total churn contributed by the author |
+| total_churn_tool | FLOAT | Calculated churn by the tool |
+
+The table was created and updated with several SQL queries, which can be found in the original document provided.
+
+### File_legacy_complexity
+
+This table contains all the file names and the amount of legacy code they contain in terms of percentages.
+
+| Column | Type | Description |
+| --- | --- | --- |
+| id | INTEGER | Primary key for the table |
+| file_name | TEXT | The name of the file |
+| legacy_percentage | FLOAT | The percentage of the file's code that is considered legacy code |
+| cog_complexity | FLOAT | Cognitive complexity of the file |
+
+Those percentages have been calculated from the contribution (line of codes written vs all the lines in the file) of the authors that have been specified in the list of gone authors (`gone_authors.txt`).
+
+### Author_contrib
+
+This table contains entries that associate an author to all the files they have made a contribution towards in the repository.
+
+| Column | Type | Description |
+| --- | --- | --- |
+| author | TEXT | The author of the commit |
+| sum(file_size_x_percentages) | FLOAT | The sum of the product of the file size and the author's percentage contribution for all files |
+| all_files | FLOAT | The sum of sizes of each file that this author has made a contribution towards |
+
+The table contains entries that associate an author with the sum of percentages of contribution towards each file in the repo. Then in another column, it associates the author with the sum of sizes of each file that this author has made a contribution towards. These two columns are relevant for later on calculating the amount of contribution calc in percentages based on sum(file_size_x_percentages)/sum(file_size). The table was created and updated with several SQL queries, which can be found in the original document provided.
+```
+
+You may want to further edit the descriptions of the columns and tables to match your tool's functionality as closely as possible.
