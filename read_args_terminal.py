@@ -8,7 +8,7 @@ def clone_git_repo(git_link):
         # The command line command to clone the git repository
         command = f'git clone {git_link}'
         subprocess.check_call(command, shell=True)
-        # print(f'Git repository {git_link} cloned successfully')
+        print(f'Git repository {git_link} cloned successfully')
     except subprocess.CalledProcessError as e:
         print(f'Error: {str(e)}')
 
@@ -46,7 +46,7 @@ def read_args_terminal():
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
     # Clone the git repository
-    # clone_git_repo(args.git)
+    clone_git_repo(args.git)
 
     # Get the absolute path of the cloned directory
     cloned_dir_abs_path = get_cloned_dir_abs_path(args.git)
@@ -54,6 +54,6 @@ def read_args_terminal():
 
     gone_authors  = extract_names_from_txt(abs_txt_path)
 
-    # print(f'Extracted names from text file: {names}')
+    print(f'Extracted names from text file: {gone_authors}')
     return cloned_dir_abs_path, gone_authors
 

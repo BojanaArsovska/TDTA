@@ -7,31 +7,16 @@ from pydriller.metrics.process.code_churn import CodeChurn
 import read_args_terminal
 from calc_gone_author_contributions import find_all_files
 import subprocess
-# import os
-#
-
-#TODO: remove
-counter = 0
-
-# TODO: REMOVE THIS IF EVERYTHING WORKS
-# clonning the directory
-# repo_url = "https://github.com/jenkinsci/jenkins.git"
-# repo = git.Repo.clone_from(repo_url, "jenkins")
 
 ROOT_DIRECTORY = (subprocess.run('pwd', shell=True, capture_output=True, text=True)).stdout
 local_repo_path, gone_authors = read_args_terminal.read_args_terminal()
-
-#TODO: remove this extra shit
-# local_repo_path = "/Users/bojanaarsovska/TDtool/jenkins"
-# gone_authors  = read_args_terminal.extract_names_from_txt("/Users/bojanaarsovska/TDtool/dead_authors.txt")
-
 
 # connect to database
 conn = sqlite3.connect('db_commits_files.db')
 cursor = conn.cursor()
 
 # create database
-# create_and_init_db()
+create_and_init_db()
 
 # open the local repository
 repo = git.Repo(local_repo_path)
@@ -100,12 +85,9 @@ def update_table_commits():
         #todo: remove this
         if counter % 100 == 0:
             print(counter)
-            # print(cal_code_churn(_commit.hash,com_element.new_path))
 
 
-# TODO:
-#  WORKS
-# update_table_commits()
+update_table_commits()
 
 # you can specify the range of commits for analysing
 def total_code_churn():
@@ -198,9 +180,7 @@ def update_total_code_churn():
     # Commit your changes
     conn.commit()
 
-#TODO: WORKS
-# update_total_code_churn()
-
+update_total_code_churn()
 find_all_files(ROOT_DIRECTORY, gone_authors)
 conn.close()
 

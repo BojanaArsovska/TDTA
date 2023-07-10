@@ -1,4 +1,3 @@
-import subprocess
 import sqlite3
 from cognitive_complexity_upgrade import get_cognitive_complexities
 
@@ -19,10 +18,6 @@ def gone_authors_contrib(gone_contributors, auth_percentage):
                 total_contrib_percentage += auth_perc[1]
 
             except:
-                # print(auth_perc[0])
-                # print(total_contrib_percentage)
-                # print(type(auth_perc[1]))
-                # print(type(total_contrib_percentage))
                 return 0.0
     return total_contrib_percentage
 
@@ -47,10 +42,3 @@ def find_all_files(root_directory, gone_auth):
         contrib_percentage = cursor.fetchall()
         cog_complexity = get_cognitive_complexities(file, root_directory)
         update_table_tot_legacy_contrib(file, gone_authors_contrib(gone_auth, contrib_percentage), cog_complexity)
-        # print(gone_auth)
-
-
-# roberto.verdecchia@tiscali.it
-# https://github.com/S2-group/ATDx
-
-# find_all_files("/Users/bojanaarsovska/TDtool/jenkins", ['stephenconnolly', 'cactusman', 'dwdyer', 'jglick'] )

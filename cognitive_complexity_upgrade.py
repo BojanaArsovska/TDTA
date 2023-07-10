@@ -1,8 +1,5 @@
 import subprocess
 
-# ROOT_DIRECTORY = (subprocess.run('pwd', shell=True, capture_output=True, text=True)).stdout
-# print(ROOT_DIRECTORY)
-
 # Define the path to the root directory to search for Java code
 def get_cognitive_complexities(filepath, root_directory):
     # counter used for the average
@@ -30,6 +27,3 @@ def get_cognitive_complexities(filepath, root_directory):
         return total_file_complexity/counter
     else:
         return total_file_complexity
-#
-#
-# get_cognitive_complexities("/Users/bojanaarsovska/TDtool/jenkins", "core/src/main/resources/hudson/maven/MavenModuleSet/configure-entries.jelly")
