@@ -1,14 +1,16 @@
+Sure! Here is the updated version of the documentation including instructions to install the PyDriller library:
 
 ```markdown
-# Installing PMD
+# Installing PMD and PyDriller
 
-PMD is an open-source, cross-platform static source code analyzer for Java, JavaScript, PLSQL, XML, and more. Here's a quick guide to help you install PMD on your system.
+PMD is an open-source, cross-platform static source code analyzer for Java, JavaScript, PLSQL, XML, and more. PyDriller is a Python framework that helps in the analysis of Git repositories. Here's a quick guide to help you install both PMD and PyDriller on your system.
 
 ## Prerequisites
 
-Before you can install PMD, make sure your system has:
+Before you can install PMD and PyDriller, make sure your system has:
 
 1. Java: PMD requires Java to run. If you haven't installed it yet, you can download and install the latest version of Java from the official Oracle website.
+2. Python and pip: PyDriller is a Python library, and it can be installed via pip. Make sure you have both Python and pip installed on your system.
 
 ## Steps to Install PMD
 
@@ -58,11 +60,26 @@ pmd -version
 ```
 If PMD is correctly installed, this command will output the installed version of PMD.
 
+## Steps to Install PyDriller
+
+1. Go to the [PyDriller page on PyPI](https://pypi.org/project/PyDriller/).
+2. Make sure you’re on a page with the latest version.
+3. Open your terminal and run the following command:
+
+```bash
+pip install PyDriller
+```
+You can verify the installation by running a Python script with the following line:
+
+```python
+import pydriller
+```
+If PyDriller is correctly installed, this will not return an error.
+
 ## PMD Plugins for IDEs
 
 PMD has plugins available for various IDEs like Eclipse, IntelliJ IDEA, NetBeans, etc., which allow you to easily use PMD within the IDE itself. You can find these plugins and their installation guides in the [official PMD documentation](https://pmd.github.io/latest/pmd_userdocs_tools.html). 
 
-Now, you're all set to use PMD for code analysis!
+Now, you're all set to use PMD and PyDriller for code analysis!
 ```
-
-As with the previous instructions, you can copy this text into a markdown file (`.md`) in your local system to use it.
+Remember to replace the placeholders like `/path/to/your/pmd/bin` with the actual paths on your system.
