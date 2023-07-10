@@ -34,92 +34,22 @@ INSERT INTO file_author_contrib (file_name, author, auth_churn, file_size) SELEC
 
 INSERT INTO file_author_contrib (total_churn) Select SUM(auth_churn) FROM file_author_contrib GROUP BY file_name where file_author_contrib.file_name = file_author_contrib.file_name;
 
-
-INSERT INTO file_author_contrib (contrib_percent) SELECT
-
-CREATE TABLE file_auth_contrib SELECT * FROM src_tbl
-
-SELECT COUNT(DISTINCT file_name) FROM commits;
-
-
-
 INSERT INTO file_author_contrib (total_churn) SELECT SUM(auth_churn) FROM file_author_contrib GROUP BY file_name;
-
-WHERE file_author_contrib;
-
-
-UPDATE file_author_contrib SET total_churn = s%s WHERE file_name = "s%s";
-
-INSERT INTO file_author_contrib (total_churn)
-SELECT SUM(auth_churn)
-FROM file_author_contrib
-GROUP BY author;
-
-
-INSERT INTO file_author_contrib (total_churn)
-SELECT total_churn
-FROM file_churn
-where file_author_contrib.file_name = file_churn.file_name;
 
 UPDATE file_author_contrib SET percentages = CAST(auth_churn AS float) / CAST(total_churn AS float);
 
-
-SELECT auth_churn/ total_churn AS percentages
-FROM file_author_contrib;
-
-
-
-ALTER TABLE file_author_contrib
-ADD file_size_x_percentages float;
-
-
-
-**** SELECT CAST(auth_churn AS float) / CAST(total_churn AS float) FROM file_author_contrib;
-
-
 delete from file_author_contrib where file_name ='';
-
-UPDATE file_author_contrib SET file_size_x_percentages = select percentages * file_size;
-
-
-UPDATE file_author_contrib SET file_size_x_percentages = SELECT (CAST(auth_churn AS float) / CAST(all_files AS float)) * file_size FROM file_author_contrib;
 
 UPDATE file_author_contrib SET file_size_x_percentages = CAST(percentages as float) * CAST(file_size as float)
 
-ALTER TABLE file_author_contrib
-DROP COLUMN percentages;
 
-
-select author, sum(file_size) from file_author_contrib;
-
-UPDATE file_author_contrib SET percentages = (CAST(auth_churn AS float) / CAST(total_churn AS float));
-
-ALTER TABLE author_contrib ADD file_size_x_percentages;
-
-
-SELECT Table_Name,
-    Column_Name
-FROM INFORMATION_SCHEMA.COLUMNS
-
-
-UPDATE file_author_contrib SET total_churn = 10 WHERE file_name = "core/src/main/java/hudson/Util.java";
-
-
-
-SELECT file_name, SUM(changes) AS SCORE FROM commits GROUP BY author, file_name order by COUNT Desc
 
 
 PRAGMA table_info(file_author_contrib);
 
-UPDATE file_author_contrib SET total_churn = 10 WHERE file_name = "core/src/main/java/hudson/Util.java";
-
-
-UPDATE author_contrib SET percentages = CAST(auth_churn AS float) / CAST(total_churn AS float);
 
 
 INSERT INTO author_contrib  Select author, sum(file_size_x_percentages), sum(file_size), sum(file_size)  from file_author_contrib where total_churn is not NULL group by author;
-
-UPDATE author_contrib SET contrib_per_auth = (CAST("sum(file_size_x_percentages)" AS float) / CAST(73984 AS float));
 
 INSERT INTO author_contrib  Select author, sum(file_size_x_percentages), 73984, 0  from file_author_contrib where total_churn is not NULL group by author;
 
@@ -148,8 +78,6 @@ select sum(select sum(percentages) from file_author_contrib group by author) fro
 select * from file_author_contrib where auth_churn != 0 or total_churn != 0 or file_size != 0 or auth_churn != NULL or total_churn != NULL or file_size != NULL or author != NULL;
 
 
-ALTER TABLE file_author_contrib DROP COLUMN contrib_percent;
-
 UPDATE file_author_contrib SET file_size_x_percentages = CAST(percentages as float) * CAST(file_size as float)
 
 UPDATE file_author_contrib
@@ -174,3 +102,6 @@ CREATE TABLE IF NOT EXISTS file_legacy_complexity(id INTEGER PRIMARY KEY,
                     file_name TEXT,
                     legacy_percentage FLOAT,
                     cog_complexity FLOAT)
+
+
+SELECT auth_churn/ total_churn AS percentages FROM file_author_contrib;

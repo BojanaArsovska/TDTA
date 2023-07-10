@@ -57,6 +57,3 @@ def read_args_terminal():
     # print(f'Extracted names from text file: {names}')
     return cloned_dir_abs_path, gone_authors
 
-
-if __name__ == '__main__':
-  read_args_terminal()

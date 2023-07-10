@@ -1,0 +1,1 @@
+SELECT * FROM file_author_contrib WHERE file_name LIKE '%.java';
