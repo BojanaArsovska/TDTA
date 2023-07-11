@@ -9,6 +9,10 @@
 ```bash
 python3 main.py -g  <link to a repository you want to analyse> -t <txt file>
 ```
+Sample
+```bash
+python3 main.py -g  https://github.com/jenkinsci/jenkins.git -t dead_authors.txt
+```
 # How to obtain the results
 1. In the same terminal window run the following commands:
 ```bash
