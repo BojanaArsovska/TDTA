@@ -73,6 +73,8 @@ PyDriller is a Python framework for mining software repositories. To install it,
 
 The tool creates several tables in the database to store data related to the analyzed repositories. Below is an explanation of each table and its columns:
 
+
+
 ### commits
 
 Stores a row for each file name in a single commit. 
@@ -86,6 +88,8 @@ Stores a row for each file name in a single commit.
 | author | TEXT | The commit's author |
 | changes | INT | The changes made in the commit (lines added or removed) |
 | nloc | INT | The number of lines of code in the file |
+
+
 
 ### file_author_contrib
 
@@ -103,6 +107,8 @@ Stores the contributions of each author to each file.
 | percentages | FLOAT | The percentage of total churn contributed by the author |
 | total_churn_tool | FLOAT | The calculated churn by the tool |
 
+
+
 ### file_legacy_complexity
 
 Stores the percentage of legacy code for each file.
@@ -113,6 +119,8 @@ Stores the percentage of legacy code for each file.
 | file_name | TEXT | The file's name |
 | legacy_percentage | FLOAT | The percentage of the file's code considered as legacy code |
 | cog_complexity | FLOAT | The file's cognitive complexity |
+
+
 
 ### author_contrib
 
@@ -131,12 +139,9 @@ Remember to replace `/path-to-pmd-bin-directory` with the actual path to your PM
 
  This tool only analyses the commits done on a branch that is locally cloned with the repository. If you'd like to analyse multiple branches, you must clone them locally.
 
+WARNING: This tool only analyses the commits done on a branch that is locally cloned with the repository. If you'd like to analyse multiple branches, you must clone them locally.
+
+
+
+
 ``` 
-
-
--  WARNING: This tool only analyses the commits done on a branch that is locally cloned with the repository. If you'd like to analyse multiple branches, you must clone them locally.
-
-
-
-
-
