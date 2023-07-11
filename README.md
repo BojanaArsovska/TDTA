@@ -11,7 +11,7 @@ python3 main.py -g  <link to a repository you want to analyse> -t <txt file>
 ```
 # How to obtain the result
 1. In the same terminal window run the following commands:
-   ```bash
+```bash
 sqlite3
 .open db_commits_files.db
 SELECT * FROM file_legacy_complexity;
