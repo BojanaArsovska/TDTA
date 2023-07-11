@@ -53,7 +53,7 @@ PyDriller is a Python framework for mining software repositories. To install it,
 3. Open your terminal and run the following command:
 
    ```bash
-   pip install PyDriller
+   > pip install PyDriller
    ```
    
    You can verify the installation by running a Python script with the following line:
