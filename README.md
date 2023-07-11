@@ -9,7 +9,7 @@
 ```bash
 python3 main.py -g  <link to a repository you want to analyse> -t <txt file>
 ```
-# How to obtain the result
+# How to obtain the results
 1. In the same terminal window run the following commands:
 ```bash
 sqlite3
