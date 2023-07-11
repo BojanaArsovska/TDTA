@@ -14,8 +14,19 @@ python3 main.py -g  <link to a repository you want to analyse> -t <txt file>
 ```bash
 sqlite3
 .open db_commits_files.db
+```
+To get the percentage of contribution that has been done by the gone authors (specified in your txt file) per file, run:
+```
 SELECT * FROM file_legacy_complexity;
 ```
+Otherwise, to get the top java files with contributions by gone authors, run:
+
+```
+SELECT * FROM file_legacy_complexity
+WHERE file_name LIKE '%.java' AND legacy_percentage is not '0.0' AND cog_complexity is not '0.0'
+ORDER BY legacy_percentage AND cog_complexity ASC;
+```
+
 
 # PMD and PyDriller Installation Guide
 
