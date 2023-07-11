@@ -24,9 +24,9 @@ repo = git.Repo(local_repo_path)
 # if you want to limit the number of commits for analysing, you can specify the value
 commits = islice(Repository(local_repo_path).traverse_commits(), 5000)
 
+
 # otherwise use this command
 # commits = Repository(local_repo_path).traverse_commits()
-
 
 
 def get_commit_shas():
@@ -43,21 +43,19 @@ def get_commit_shas():
         print(f"The repository has fewer than {n} commits.")
         nth_commit_sha = None
 
-
     # get the first and last commit SHAs
     # first commit is the last and last commit is the first item in the list
     first_commit_sha = commit_shas[-1]
     last_commit_sha = commit_shas[0]
-
 
     return first_commit_sha, last_commit_sha, nth_commit_sha
 
 
 def cal_code_churn(commit_sha, file_name):
     try:
-        metric = CodeChurn(path_to_repo= local_repo_path,
-                           from_commit= str(commit_sha),
-                           to_commit= str(commit_sha))
+        metric = CodeChurn(path_to_repo=local_repo_path,
+                           from_commit=str(commit_sha),
+                           to_commit=str(commit_sha))
         files_count = metric.count()
         return files_count[file_name]
 
@@ -72,34 +70,40 @@ def update_table_commits():
         counter += 1
         for com_element in _commit.modified_files:
             if com_element.change_type.name == "RENAME":
-                cursor.execute('UPDATE commits SET file_name = "s%s" WHERE file_name = "s%s";' %(com_element.new_path, com_element.old_path))
+                cursor.execute('UPDATE commits SET file_name = "s%s" WHERE file_name = "s%s";' % (
+                com_element.new_path, com_element.old_path))
             else:
                 if com_element.new_path is not None:
-                    cursor.execute("INSERT INTO commits (sha, date, file_name, author, changes, nloc) VALUES (?,?,?,?,?,?)",
-                               (_commit.hash, _commit.committer_date, com_element.new_path, _commit.author.name, cal_code_churn(_commit.hash,com_element.new_path), com_element.nloc))
+                    cursor.execute(
+                        "INSERT INTO commits (sha, date, file_name, author, changes, nloc) VALUES (?,?,?,?,?,?)",
+                        (_commit.hash, _commit.committer_date, com_element.new_path, _commit.author.name,
+                         cal_code_churn(_commit.hash, com_element.new_path), com_element.nloc))
                 else:
-                    cursor.execute("INSERT INTO commits (sha, date, file_name, author, changes, nloc) VALUES (?,?,?,?,?,?)",
-                               (_commit.hash, _commit.committer_date, com_element.old_path, _commit.author.name, cal_code_churn(_commit.hash,com_element.old_path), com_element.nloc))
+                    cursor.execute(
+                        "INSERT INTO commits (sha, date, file_name, author, changes, nloc) VALUES (?,?,?,?,?,?)",
+                        (_commit.hash, _commit.committer_date, com_element.old_path, _commit.author.name,
+                         cal_code_churn(_commit.hash, com_element.old_path), com_element.nloc))
             conn.commit()
 
-        #todo: remove this
+        # todo: remove this
         if counter % 100 == 0:
             print(counter)
 
 
 update_table_commits()
 
+
 # you can specify the range of commits for analysing
 def total_code_churn():
     first_commit, last_commit, nth_commit_sha = get_commit_shas()
-    metric = CodeChurn(path_to_repo= local_repo_path,
-                       from_commit= first_commit,
-                       to_commit= nth_commit_sha)
+    metric = CodeChurn(path_to_repo=local_repo_path,
+                       from_commit=first_commit,
+                       to_commit=nth_commit_sha)
     return metric
+
 
 # calculates the code churn of files in the given commit
 def update_total_code_churn():
-
     sql_commands = [
         """
         INSERT INTO file_author_contrib (file_name, author, auth_churn, file_size) 
@@ -177,13 +181,10 @@ def update_total_code_churn():
     for command in sql_commands:
         cursor.execute(command)
 
-    # Commit your changes
+    # Commit the changes
     conn.commit()
+
 
 update_total_code_churn()
 find_all_files(ROOT_DIRECTORY, gone_authors)
 conn.close()
-
-
-
-
