@@ -1,7 +1,7 @@
 
 
 # How to run the tool
-1. Clone this directory
+1. Clone this repository
 2. Open a terminal window and navigate to the cloned repository
 3. Make a txt file that contains a list of names and surnames of gone authors, no comma separation
 3. Run the following command in the terminal:
