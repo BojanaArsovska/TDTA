@@ -111,9 +111,13 @@ Stores the association of an author with all the files they have contributed to 
 | all_files | FLOAT | The sum of sizes of each file that the author contributed to |
 
 The corresponding SQL queries to create and update these tables are available in the original document provided.
-```
+
 
 Remember to replace `/path-to-pmd-bin-directory` with the actual path to your PMD bin directory.
 
-> :warning: This tool only analyses the commits done on a branch that is locally cloned with the repository. If you'd like to analyse multiple branches, you must clone them locally.
+ This tool only analyses the commits done on a branch that is locally cloned with the repository. If you'd like to analyse multiple branches, you must clone them locally.
+
+diff
+- WARNING:```  This tool only analyses the commits done on a branch that is locally cloned with the repository. If you'd like to analyse multiple branches, you must clone them locally.
+
 
