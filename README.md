@@ -61,7 +61,7 @@ PyDriller is a Python framework for mining software repositories. To install it,
 
 The tool creates several tables in the database to store data related to the analyzed repositories. Below is an explanation of each table and its columns:
 
-### Commits
+### commits
 
 Stores a row for each file name in a single commit. 
 
@@ -75,7 +75,7 @@ Stores a row for each file name in a single commit.
 | changes | INT | The changes made in the commit (lines added or removed) |
 | nloc | INT | The number of lines of code in the file |
 
-### File_author_contrib
+### file_author_contrib
 
 Stores the contributions of each author to each file.
 
@@ -91,7 +91,7 @@ Stores the contributions of each author to each file.
 | percentages | FLOAT | The percentage of total churn contributed by the author |
 | total_churn_tool | FLOAT | The calculated churn by the tool |
 
-### File_legacy_complexity
+### file_legacy_complexity
 
 Stores the percentage of legacy code for each file.
 
@@ -102,7 +102,7 @@ Stores the percentage of legacy code for each file.
 | legacy_percentage | FLOAT | The percentage of the file's code considered as legacy code |
 | cog_complexity | FLOAT | The file's cognitive complexity |
 
-### Author_contrib
+### author_contrib
 
 Stores the association of an author with all the files they have contributed to in the repository.
 
