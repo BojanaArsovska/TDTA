@@ -5,8 +5,10 @@
 2. Open a terminal window and navigate to the cloned repository
 3. Make a txt file that contains a list of names and surnames of gone authors, no comma separation
 3. Run the following command in the terminal:
-   bash
+```bash
    python3 main.py -g  <link to a repository you want to analyse> -t <txt file>
+   ```
+   
 
 # PMD and PyDriller Installation Guide
 
@@ -53,7 +55,7 @@ PyDriller is a Python framework for mining software repositories. To install it,
 3. Open your terminal and run the following command:
 
    ```bash
-   > pip install PyDriller
+   pip install PyDriller
    ```
    
    You can verify the installation by running a Python script with the following line:
