@@ -69,7 +69,7 @@ PyDriller is a Python framework for mining software repositories. To install it,
 
 
 
-```Database Tables for the Tool```
+### Explanation of the Database Tables Used
 
 The tool creates several tables in the database to store data related to the analyzed repositories. Below is an explanation of each table and its columns:
 
