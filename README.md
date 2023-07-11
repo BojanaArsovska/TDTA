@@ -1,4 +1,4 @@
-```markdown
+```markdown```
 
 # How to run the tool
 1. CLone this directory
