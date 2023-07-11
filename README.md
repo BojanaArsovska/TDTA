@@ -77,7 +77,7 @@ The tool creates several tables in the database to store data related to the ana
 
 ### commits
 
-Stores a row for each file name in a single commit. 
+
 
 | Column | Type | Description |
 | --- | --- | --- |
@@ -89,11 +89,12 @@ Stores a row for each file name in a single commit.
 | changes | INT | The changes made in the commit (lines added or removed) |
 | nloc | INT | The number of lines of code in the file |
 
+Stores a row for each file name in a single commit. 
 
 
 ### file_author_contrib
 
-Stores the contributions of each author to each file.
+
 
 | Column | Type | Description |
 | --- | --- | --- |
@@ -107,11 +108,10 @@ Stores the contributions of each author to each file.
 | percentages | FLOAT | The percentage of total churn contributed by the author |
 | total_churn_tool | FLOAT | The calculated churn by the tool |
 
+Stores the contributions of each author to each file.
 
 
 ### file_legacy_complexity
-
-Stores the percentage of legacy code for each file.
 
 | Column | Type | Description |
 | --- | --- | --- |
@@ -121,10 +121,11 @@ Stores the percentage of legacy code for each file.
 | cog_complexity | FLOAT | The file's cognitive complexity |
 
 
+Stores the percentage of legacy code for each file.
 
 ### author_contrib
 
-Stores the association of an author with all the files they have contributed to in the repository.
+
 
 | Column | Type | Description |
 | --- | --- | --- |
@@ -132,7 +133,8 @@ Stores the association of an author with all the files they have contributed to 
 | sum(file_size_x_percentages) | FLOAT | The sum of the product of the file size and the author's percentage contribution for all files |
 | all_files | FLOAT | The sum of sizes of each file that the author contributed to |
 
-The corresponding SQL queries to create and update these tables are available in the original document provided.
+Stores the association of an author with all the files they have contributed to in the repository.
+The corresponding SQL queries to create and update these tables are available in main.py .
 
 
 Remember to replace `/path-to-pmd-bin-directory` with the actual path to your PMD bin directory.
