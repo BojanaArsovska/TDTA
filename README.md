@@ -136,6 +136,7 @@ Stores the percentage of legacy code for each file.
 Stores the association of an author with all the files they have contributed to in the repository.
 The corresponding SQL queries to create and update these tables are available in main.py .
 
+### Important
 
 Remember to replace `/path-to-pmd-bin-directory` with the actual path to your PMD bin directory.
 
