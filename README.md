@@ -17,7 +17,7 @@ sqlite3
 ```
 To get the percentage of contribution that has been done by the gone authors (specified in your txt file) per file, run:
 ```
-SELECT author,file_name, SUM(changes) AS SCORE, COUNT(author) AS COUNT FROM commits GROUP BY author, file_name;
+SELECT author, file_name, SUM(changes) AS SCORE, COUNT(author) AS COUNT FROM commits GROUP BY author, file_name;
 ```
 Otherwise, to get the top java files with contributions by gone authors, run:
 
