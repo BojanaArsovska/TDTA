@@ -133,10 +133,10 @@ Remember to replace `/path-to-pmd-bin-directory` with the actual path to your PM
 
 ``` 
 
-```diff
+
 -  WARNING: This tool only analyses the commits done on a branch that is locally cloned with the repository. If you'd like to analyse multiple branches, you must clone them locally.
 
-```
+
 
 
 
