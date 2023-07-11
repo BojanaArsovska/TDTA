@@ -3,8 +3,6 @@
 
 This document guides you through the installation of PMD, PyDriller, and some necessary Python modules, along with an explanation of the database tables created by the tool.
 
-> :warning: **Warning:** This tool only analyses the commits done on a branch that is locally cloned with the repository. If you'd like to analyse multiple branches, you must clone them locally.
-
 ## Prerequisites
 
 Before you can install PMD, PyDriller, and other Python modules, make sure your system has:
@@ -116,4 +114,6 @@ The corresponding SQL queries to create and update these tables are available in
 ```
 
 Remember to replace `/path-to-pmd-bin-directory` with the actual path to your PMD bin directory.
+
+> :warning: This tool only analyses the commits done on a branch that is locally cloned with the repository. If you'd like to analyse multiple branches, you must clone them locally.
 
