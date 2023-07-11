@@ -20,7 +20,7 @@ This document guides you through the installation of PMD, PyDriller, and some ne
 Before you can install PMD, PyDriller, and other Python modules, make sure your system has:
 
 1. **Java:** PMD requires Java to run. If you haven't installed it yet, you can download and install the latest version of Java from the official Oracle website.
-2. **Python and pip:** PyDriller and other modules are Python libraries and can be installed via pip. Make sure you have both Python and pip installed on your system.
+2. **Python3 and pip:** PyDriller and other modules are Python libraries and can be installed via pip. Make sure you have both Python3 and pip installed on your system.
 
 ## Installing PMD
 
