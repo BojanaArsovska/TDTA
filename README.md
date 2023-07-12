@@ -3,7 +3,7 @@
 # How to run the tool
 1. Clone this repository
 2. Open a terminal window and navigate to the cloned repository
-3. In the same directory, make a txt file that contains a list of names and surnames of authors that have left the company, separated by a new line
+3. In the same directory, make a txt file that contains a list of git account names of authors, that have left the company, separated by a new line
 3. Run the following command in the terminal:
 
 ```bash
