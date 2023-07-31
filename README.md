@@ -16,7 +16,7 @@ python3 main.py -g  https://github.com/jenkinsci/jenkins.git -t dead_authors.txt
 
 
 # How to install all the required libraries:
-To install all the required libraries such as SQL, PMD and PyDriller, simply run the follwoing command in your temrinal:
+To install all the required libraries such as SQL, PMD and PyDriller, simply run the following command in your terminal:
 ```bash
 pip3 install -r requirements.txt
 ```
