@@ -13,6 +13,15 @@ Sample
 ```bash
 python3 main.py -g  https://github.com/jenkinsci/jenkins.git -t dead_authors.txt
 ```
+
+
+# How to install all the required libraries:
+To install all the required libraries such as SQL, PMD and PyDriller, simply run the follwoing command in your temrinal:
+```bash
+pip3 install -r requirements.txt
+```
+
+
 # How to obtain the results
 1. In the same terminal window run the following commands:
 ```bash
