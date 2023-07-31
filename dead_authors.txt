@@ -8,5 +8,4 @@ CloudBees DEV@Cloud
 bagrehc
 Ing. Pavel Janousek
 Damian Szczepanik
-cactusman
-dwdyer
+dty

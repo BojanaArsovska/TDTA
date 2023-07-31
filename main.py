@@ -6,27 +6,8 @@ from pydriller import *
 from pydriller.metrics.process.code_churn import CodeChurn
 import read_args_terminal
 from calc_gone_author_contributions import find_all_files
+from results_fetcher import get_data_from_db
 import subprocess
-
-ROOT_DIRECTORY = (subprocess.run('pwd', shell=True, capture_output=True, text=True)).stdout
-local_repo_path, gone_authors = read_args_terminal.read_args_terminal()
-
-# connect to database
-conn = sqlite3.connect('db_commits_files.db')
-cursor = conn.cursor()
-
-# create database
-create_and_init_db()
-
-# open the local repository
-repo = git.Repo(local_repo_path)
-
-# if you want to limit the number of commits for analysing, you can specify the value
-commits = islice(Repository(local_repo_path).traverse_commits(), 5000)
-
-
-# otherwise use this command
-# commits = Repository(local_repo_path).traverse_commits()
 
 
 def get_commit_shas():
@@ -71,7 +52,7 @@ def update_table_commits():
         for com_element in _commit.modified_files:
             if com_element.change_type.name == "RENAME":
                 cursor.execute('UPDATE commits SET file_name = "s%s" WHERE file_name = "s%s";' % (
-                com_element.new_path, com_element.old_path))
+                    com_element.new_path, com_element.old_path))
             else:
                 if com_element.new_path is not None:
                     cursor.execute(
@@ -88,9 +69,6 @@ def update_table_commits():
         # todo: remove this
         if counter % 100 == 0:
             print(counter)
-
-
-update_table_commits()
 
 
 # you can specify the range of commits for analysing
@@ -177,14 +155,36 @@ def update_total_code_churn():
         """
     ]
 
-    # Execute each SQL command
     for command in sql_commands:
         cursor.execute(command)
 
-    # Commit the changes
     conn.commit()
 
 
-update_total_code_churn()
-find_all_files(ROOT_DIRECTORY, gone_authors)
-conn.close()
+if __name__ == "__main__":
+    ROOT_DIRECTORY = (subprocess.run('pwd', shell=True, capture_output=True, text=True)).stdout
+    local_repo_path, gone_authors = read_args_terminal.read_args_terminal()
+
+    # connect to database
+    conn = sqlite3.connect('db_commits_files.db')
+    cursor = conn.cursor()
+
+    # create database
+    # create_and_init_db()
+
+    # open the local repository
+    repo = git.Repo(local_repo_path)
+
+    # if you want to limit the number of commits for analysing, you can specify the value
+    commits = islice(Repository(local_repo_path).traverse_commits(), 5000)
+
+    # otherwise use this command
+    # commits = Repository(local_repo_path).traverse_commits()
+
+    # print(read_args_terminal.read_args_terminal()[1])
+
+    # update_table_commits()
+    # update_total_code_churn()
+    # find_all_files(ROOT_DIRECTORY, gone_authors)
+    get_data_from_db(cursor)
+    conn.close()

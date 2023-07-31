@@ -3,7 +3,6 @@ import sqlite3
 from datetime import datetime
 import sqlite3
 from create_sql_db import *
-from renamed_files import *
 
 # clonning the directory
 # repo_url = "https://github.com/jenkinsci/jenkins.git"

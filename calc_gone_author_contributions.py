@@ -11,6 +11,9 @@ conn = sqlite3.connect('db_commits_files.db')
 cursor = conn.cursor()
 counter = 0
 
+def find_gone_authors():
+    cursor.execute("SELECT DISTINCT(author) FROM file_author_contrib;")
+    return [item[0] for item in cursor.fetchall()]
 
 def find_currently_exisitng_files(directory):
 
@@ -76,3 +79,5 @@ def find_all_files(root_directory, gone_auth):
         #     result = cursor.fetchall()
         #     if len(result) is not 0:
         #         print(result)
+
+
