@@ -28,6 +28,7 @@ def create_commits_db(cursor):
 def create_file_legacy_complexity_table(cursor):
     cursor.execute('''CREATE TABLE IF NOT EXISTS file_legacy_complexity(id INTEGER PRIMARY KEY,
                     file_name TEXT,
+                    author TEXT,
                     legacy_percentage FLOAT,
                     cog_complexity FLOAT);'''
                    )

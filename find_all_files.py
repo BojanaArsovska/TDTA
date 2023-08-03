@@ -77,7 +77,7 @@ def update_table_tot_legacy_contrib(file, gone_authors_contib, cog_complexity):
         try:
             author, contrib = author_contrib
         except:
-            print("author_contrib",author_contrib)
+            print("author_contrib", author_contrib)
         # gone_authors_contib are now This function will return a dictionary where the keys are the authors and the values are their total contribution percentages. The function keeps track of the previous author and when it detects a change in the author, it stores the total contribution of the previous author and resets the total contribution for the new author.
         # cursor.execute("ALTER TABLE file_legacy_complexity ADD COLUMN author text")
         cursor.execute("INSERT INTO file_legacy_complexity (file_name, author, legacy_percentage, cog_complexity) VALUES (?,?,?,?)",
@@ -106,6 +106,8 @@ def find_all_files(root_directory, gone_contributors):
             print(f'Done {str(counter)} files out of {str(len(file_list))}')
 
         file = file[0]
+
+        # the biggest optimization ive done in my life
         # Check if the file ends with .java
         if not file.endswith('.java'):
             continue  # Skip to the next iteration if the file is not a .java file
@@ -120,6 +122,8 @@ def find_all_files(root_directory, gone_contributors):
 
        # sometimes authors_n_contrib is empty because the authors of the file are not in the list of formed developers
         # print("(gone_contributors, contrib_percentage)", (gone_contributors, contrib_percentage))
+
+        # the biggest optimization ive done in my life
         if authors_n_contrib != []:
             update_table_tot_legacy_contrib(file, authors_n_contrib, cog_complexity)
 

@@ -8,7 +8,8 @@ def get_cognitive_complexities(filepath, root_directory):
     total_file_complexity = 0
 
     # Calculate the cognitive complexity of the Java file
-    cmd = 'PATH=$PATH:$HOME/pmd-bin-7.0.0-rc1/bin/; pmd check -f text -R $HOME/TDtool/cogcomp.xml -d ' + str(root_directory + filepath)
+    # Don't forget to write in your thesis how much time parsing this and cutting it and combining it with different sources took.
+    cmd = 'PATH=$PATH:$HOME/pmd-bin-7.0.0-rc1/bin/; pmd check -f text -R $HOME/TDTArepo/TDTA/cogcomp.xml -d ' + str(root_directory + filepath)
     result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
 
     # total_file_complexity = Sum (complexities of all methods in a file) / num od methods
@@ -23,6 +24,8 @@ def get_cognitive_complexities(filepath, root_directory):
             total_file_complexity += int(method_complexity)
     else:
         total_file_complexity = 0
+
+    # print(result)
     if counter is not 0:
         return total_file_complexity/counter
     else:

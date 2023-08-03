@@ -10,15 +10,12 @@ def get_data_from_db(cursor):
     df1 = pd.DataFrame(result1, columns=['Author', 'File Name', 'Number of Edits', 'Author Edits/Commits on the file '])
 
     # Execute the second query
-    cursor.execute("""SELECT * FROM file_legacy_complexity
-                 WHERE file_name LIKE '%.java' 
-                 AND legacy_percentage is not '0.0' 
-                 AND cog_complexity is not '0.0'
-                 ORDER BY legacy_percentage AND cog_complexity DESC""")
+    cursor.execute("""SELECT * FROM file_legacy_complexity 
+                 ORDER BY legacy_percentage AND cog_complexity DESC;""")
     result2 = cursor.fetchall()
 
     # Convert result2 to dataframe for better view
-    df2 = pd.DataFrame(result2, columns=['ID', 'File Name', 'Legacy', 'Cognitive Complexity'] )
+    df2 = pd.DataFrame(result2, columns=['ID', 'File Name', 'Author', 'Legacy', 'Cognitive Complexity'] )
 
     # Save the results into CSV files
     df1.to_csv('table1.csv', index=False)

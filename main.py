@@ -5,13 +5,15 @@ from create_sql_db import *
 from pydriller import *
 from pydriller.metrics.process.code_churn import CodeChurn
 import read_args_terminal
-from calc_gone_author_contributions import find_all_files
+from find_all_files import find_all_files
 from results_fetcher import get_data_from_db
+from find_all_files import find_gone_authors
+import time_script
 import subprocess
 
 
 def get_commit_shas():
-    repo = git.Repo(local_repo_path)
+    repo = git.Repo(cloned_repo_path)
     n = 5000
 
     # get the list of all commit SHAs in the master branch
@@ -34,7 +36,7 @@ def get_commit_shas():
 
 def cal_code_churn(commit_sha, file_name):
     try:
-        metric = CodeChurn(path_to_repo=local_repo_path,
+        metric = CodeChurn(path_to_repo=cloned_repo_path,
                            from_commit=str(commit_sha),
                            to_commit=str(commit_sha))
         files_count = metric.count()
@@ -74,7 +76,7 @@ def update_table_commits():
 # you can specify the range of commits for analysing
 def total_code_churn():
     first_commit, last_commit, nth_commit_sha = get_commit_shas()
-    metric = CodeChurn(path_to_repo=local_repo_path,
+    metric = CodeChurn(path_to_repo=cloned_repo_path,
                        from_commit=first_commit,
                        to_commit=nth_commit_sha)
     return metric
@@ -162,29 +164,39 @@ def update_total_code_churn():
 
 
 if __name__ == "__main__":
-    ROOT_DIRECTORY = (subprocess.run('pwd', shell=True, capture_output=True, text=True)).stdout
-    local_repo_path, gone_authors = read_args_terminal.read_args_terminal()
+
+
+    # should be changed to lead to the path of the clonned repo which is the tool
+    # ROOT_DIRECTORY = (subprocess.run('pwd', shell=True, capture_output=True, text=True)).stdout
+    cloned_repo_path, gone_authors = read_args_terminal.read_args_terminal()
+
+    ROOT_DIRECTORY = cloned_repo_path
+
 
     # connect to database
     conn = sqlite3.connect('db_commits_files.db')
     cursor = conn.cursor()
 
     # create database
-    # create_and_init_db()
+    create_and_init_db()
 
     # open the local repository
-    repo = git.Repo(local_repo_path)
+    repo = git.Repo(cloned_repo_path)
 
     # if you want to limit the number of commits for analysing, you can specify the value
-    commits = islice(Repository(local_repo_path).traverse_commits(), 5000)
+    commits = islice(Repository(cloned_repo_path).traverse_commits(), 5000)
 
     # otherwise use this command
     # commits = Repository(local_repo_path).traverse_commits()
 
     # print(read_args_terminal.read_args_terminal()[1])
 
-    # update_table_commits()
-    # update_total_code_churn()
-    # find_all_files(ROOT_DIRECTORY, gone_authors)
+    update_table_commits()
+    update_total_code_churn()
+
+    if gone_authors is None:
+        gone_authors = find_gone_authors(cursor)
+
+    find_all_files(ROOT_DIRECTORY, gone_authors)
     get_data_from_db(cursor)
     conn.close()
