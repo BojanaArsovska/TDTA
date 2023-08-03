@@ -2,7 +2,6 @@ import argparse
 import re
 import subprocess
 import os
-from calc_gone_author_contributions import find_gone_authors
 
 
 def clone_git_repo(git_link):
@@ -33,12 +32,31 @@ def get_cloned_dir_abs_path(git_link):
 
     return abs_path
 
+
+def parsing_dir_name_through_args(args):
+
+    # Get the current working directory
+    current_dir = os.getcwd()
+
+    # URL of the repo
+    repo_url = args.git
+    #todo take the param that fetches the arguments
+
+    # Get the name of the repo from the URL
+    repo_name = repo_url.split("/")[-1].split(".")[0]
+
+    # Construct the full path to the cloned repo
+    repo_dir = os.path.join(current_dir, repo_name)
+
+
+
 def read_args_terminal():
     parser = argparse.ArgumentParser(description='Process link to a repository and a txt file of ex employee authors (Name Surname).')
     parser.add_argument('-g', '--git', type=str, help='Link to the git repository.')
     parser.add_argument('-fd', '--txt', type=str, help='Path to the former_developers.txt file.')
 
     args = parser.parse_args()
+    parsing_dir_name_through_args(args)
 
     # Change directory to script's location
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
@@ -51,7 +69,7 @@ def read_args_terminal():
     print(f'Cloned directory absolute path: {cloned_dir_abs_path}')
 
     if args.txt is None:
-        gone_authors = find_gone_authors()
+        gone_authors = None
     else:
         abs_txt_path = os.path.abspath(args.txt)
         gone_authors = extract_names_from_txt(abs_txt_path)
