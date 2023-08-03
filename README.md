@@ -3,12 +3,17 @@
 # How to run the tool
 1. Clone this repository
 2. Open a terminal window and navigate to the cloned repository
-3. In the same directory, make a txt file that contains a list of git account names of authors, that have left the company, separated by a new line
-3. Run the following command in the terminal:
+3. Then use the example below to run the tool.
+4. In the same directory, if you wish to, you can make a txt file that contains a list of git account names of authors, that have left the company, separated by a new line. This means that the tool will analyse the specified repository and only calculate the legacy and congnitive complexity for file that have been edited by one or more authors that have been specified in your txt file.
 
+```bash
+python3 main.py -g  <link to a repository you want to analyse> 
+```
+Alternatively, run the command with the -t flag
 ```bash
 python3 main.py -g  <link to a repository you want to analyse> -t <txt file>
 ```
+
 Sample
 ```bash
 python3 main.py -g  https://github.com/jenkinsci/jenkins.git -t dead_authors.txt
@@ -23,22 +28,9 @@ pip3 install -r requirements.txt
 
 
 # How to obtain the results
-1. In the same terminal window run the following commands:
-```bash
-sqlite3
-.open db_commits_files.db
-```
-To get the percentage of contribution that has been done by the gone authors (specified in your txt file) per file, run:
-```
-SELECT author, file_name, SUM(changes) AS SCORE, COUNT(author) AS COUNT FROM commits GROUP BY author, file_name;
-```
-Otherwise, to get the top java files with contributions by gone authors, run:
-
-```
-SELECT * FROM file_legacy_complexity
-WHERE file_name LIKE '%.java' AND legacy_percentage is not '0.0' AND cog_complexity is not '0.0'
-ORDER BY legacy_percentage AND cog_complexity ASC;
-```
+1. The result are saved in results1.csv and result2.csv
+   - In results1.csv, you will find Table 1 which shows the authors contribution of file they have edited
+   - In results2.csv you will find the values for legacy and cognitive complexity of each file by the specified contributors. 
 
 
 # PMD and PyDriller Installation Guide
