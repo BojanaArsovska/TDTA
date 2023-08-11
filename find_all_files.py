@@ -86,7 +86,7 @@ def update_table_tot_legacy_contrib(file, gone_authors_contib, cog_complexity):
 
 
 # Loops through all directories and subdirectories to find all files
-def find_all_files(root_directory, gone_contributors):
+def find_all_files(root_directory, gone_contributors, ROOT_DIRECTORY):
     # print("gone_contributors find all files",gone_contributors)
     root_directory = root_directory + "/"
     counter = 0
@@ -116,7 +116,7 @@ def find_all_files(root_directory, gone_contributors):
         cursor.execute('SELECT author, percentages FROM file_author_contrib WHERE file_name = "%s";' %(file))
 
         contrib_percentage = cursor.fetchall()
-        cog_complexity = get_cognitive_complexities(file, root_directory)
+        cog_complexity = get_cognitive_complexities(file, root_directory, ROOT_DIRECTORY)
         print(cog_complexity)
         authors_n_contrib = authors_contrib(gone_contributors, contrib_percentage)
 

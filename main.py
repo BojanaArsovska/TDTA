@@ -1,4 +1,5 @@
 import sys
+import os
 from itertools import islice
 import git
 from create_sql_db import *
@@ -170,7 +171,7 @@ if __name__ == "__main__":
     # ROOT_DIRECTORY = (subprocess.run('pwd', shell=True, capture_output=True, text=True)).stdout
     cloned_repo_path, gone_authors = read_args_terminal.read_args_terminal()
 
-    ROOT_DIRECTORY = cloned_repo_path
+    ROOT_DIRECTORY = os.getcwd()
 
 
     # connect to database
@@ -197,6 +198,6 @@ if __name__ == "__main__":
     if gone_authors is None:
         gone_authors = find_gone_authors(cursor)
 
-    find_all_files(ROOT_DIRECTORY, gone_authors)
+    find_all_files(cloned_repo_path, gone_authors, ROOT_DIRECTORY)
     get_data_from_db(cursor)
     conn.close()
