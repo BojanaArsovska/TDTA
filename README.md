@@ -1,7 +1,7 @@
 
 
 # How to run the tool
-1. Clone this repository
+1. Clone this repository in your home directory (on MacOS)
 2. Open a terminal window and navigate to the cloned repository
 3. Then use the example below to run the tool.
 4. In the same directory, if you wish to, you can make a txt file that contains a list of git account names of authors, that have left the company, separated by a new line. This means that the tool will analyse the specified repository and only calculate the legacy and congnitive complexity for file that have been edited by one or more authors that have been specified in your txt file.
