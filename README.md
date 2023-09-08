@@ -29,7 +29,7 @@ pip3 install -r requirements.txt
 
 # How to obtain the results
 1. The result are saved in results1.csv and result2.csv
-   - In results1.csv, you will find Table 1 which shows the authors contribution of file they have edited
+   - In results1.csv, you will find Table 1 which shows the authors contribution of file they have edited. Meaning, it shows how many edits a author - "Author" had done on THAT file in the "Number of Edits". The "Author Edits/Commits on the file" shows how many times THAT author has edited the file in column "File Name".
    - In results2.csv you will find the values for legacy and cognitive complexity of each file by the specified contributors. 
 
 
