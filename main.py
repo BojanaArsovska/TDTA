@@ -44,7 +44,7 @@ def cal_code_churn(commit_sha, file_name):
         return files_count[file_name]
 
     except:
-        print("Nonexistant file", file_name)
+        print("Removed file from this repo", file_name)
         return 0
 
 
@@ -198,6 +198,20 @@ if __name__ == "__main__":
     if gone_authors is None:
         gone_authors = find_gone_authors(cursor)
 
-    find_all_files(cloned_repo_path, gone_authors, ROOT_DIRECTORY)
-    get_data_from_db(cursor)
+    # find_all_files(cloned_repo_path, gone_authors, ROOT_DIRECTORY)
+    # get_data_from_db(cursor)
     conn.close()
+
+
+
+    database = "db_commits_files.db"
+
+    if os.path.exists(database):
+        try:
+            os.remove(database)
+            print(f"{database} has been removed.")
+        except Exception as e:
+            print(f"Error removing {database}: {e}")
+    else:
+        print(f"{database} does not exist in the current directory.")
+
