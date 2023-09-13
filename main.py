@@ -198,8 +198,8 @@ if __name__ == "__main__":
     if gone_authors is None:
         gone_authors = find_gone_authors(cursor)
 
-    # find_all_files(cloned_repo_path, gone_authors, ROOT_DIRECTORY)
-    # get_data_from_db(cursor)
+    find_all_files(cloned_repo_path, gone_authors, ROOT_DIRECTORY)
+    get_data_from_db(cursor)
     conn.close()
 
 
@@ -208,6 +208,7 @@ if __name__ == "__main__":
 
     if os.path.exists(database):
         try:
+            os.remove(database)
             os.remove(database)
             print(f"{database} has been removed.")
         except Exception as e:
