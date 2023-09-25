@@ -14,7 +14,8 @@ def get_cognitive_complexities(filepath, root_directory, ROOT_DIRECTORY):
     result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
 
     # total_file_complexity = Sum (complexities of all methods in a file) / num od methods
-    # '' == result.stdout when the tool cannot find the complexity it give a result one of the 3
+    # '' == result.stdout when the tool cannot find the complexity it gives a result one of the 3
+
     if ' ' != result.stdout and '' != result.stdout and None != result.stdout:
         output = result.stdout
         output = output.splitlines()

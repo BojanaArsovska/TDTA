@@ -47,6 +47,7 @@ def parsing_dir_name_through_args(args):
 
     # Construct the full path to the cloned repo
     repo_dir = os.path.join(current_dir, repo_name)
+    return repo_name
 
 
 
@@ -56,7 +57,7 @@ def read_args_terminal():
     parser.add_argument('-fd', '--txt', type=str, help='Path to the former_developers.txt file.')
 
     args = parser.parse_args()
-    parsing_dir_name_through_args(args)
+    cloned_dir_name = parsing_dir_name_through_args(args)
 
     # Change directory to script's location
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
@@ -74,5 +75,5 @@ def read_args_terminal():
         abs_txt_path = os.path.abspath(args.txt)
         gone_authors = extract_names_from_txt(abs_txt_path)
 
-    return cloned_dir_abs_path, gone_authors
+    return cloned_dir_abs_path, gone_authors, cloned_dir_name
 

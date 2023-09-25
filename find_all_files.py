@@ -42,7 +42,7 @@ def find_currently_exisitng_files(directory):
     return file_list
 
 
-# calc the total contribution of all authors in the list for a file
+# calculate the total contribution of all authors in the list for a file
 def authors_contrib(gone_contributors, auth_percentage):
     total_contrib_percentage = 0
     prev_author = None
@@ -109,15 +109,18 @@ def find_all_files(root_directory, gone_contributors, ROOT_DIRECTORY):
 
         # the biggest optimization ive done in my life
         # Check if the file ends with .java
+        print("checking if this ends in .java", file)
         if not file.endswith('.java'):
+            print("no \n ")
             continue  # Skip to the next iteration if the file is not a .java file
-
+        else:
+            print("yes \n ")
 
         cursor.execute('SELECT author, percentages FROM file_author_contrib WHERE file_name = "%s";' %(file))
 
         contrib_percentage = cursor.fetchall()
         cog_complexity = get_cognitive_complexities(file, root_directory, ROOT_DIRECTORY)
-        print(cog_complexity)
+        # print("print(file, cog_complexity)", file, cog_complexity)
         authors_n_contrib = authors_contrib(gone_contributors, contrib_percentage)
 
        # sometimes authors_n_contrib is empty because the authors of the file are not in the list of formed developers
