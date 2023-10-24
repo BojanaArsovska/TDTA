@@ -7,11 +7,14 @@ from create_sql_db import *
 from pydriller import *
 from pydriller.metrics.process.code_churn import CodeChurn
 import read_args_terminal
-from find_all_files import find_all_files
 from results_fetcher import get_data_from_db
-from find_all_files import find_gone_authors
+from find_all_files import find_gone_authors, find_all_files
 import time_script
 import subprocess
+import sqlite3
+import pandas as pd
+import xlsxwriter
+from check_if_java_file import check_type_java
 
 # this is never called for some reason
 
@@ -44,7 +47,8 @@ def cal_code_churn(commit_sha, file_name):
     try:
         metric = CodeChurn(path_to_repo=cloned_repo_path,
                            from_commit=str(commit_sha),
-                           to_commit=str(commit_sha))
+                           to_commit=str(commit_sha),
+                           add_deleted_lines_to_churn=True) #design decision
         files_count = metric.count()
         return files_count[file_name]
 
@@ -72,23 +76,27 @@ def cal_code_churn(commit_sha, file_name):
 def update_table_commits(commits):
     counter = 0
     for _commit in commits:
-        print(_commit.hash)
+
         counter += 1
         for com_element in _commit.modified_files:
-            if com_element.change_type.name == "RENAME":
-                cursor.execute('UPDATE commits SET file_name = "s%s" WHERE file_name = "s%s";' % (
-                    com_element.new_path, com_element.old_path))
-            else:
-                if com_element.new_path is not None:
-                    cursor.execute(
-                        "INSERT INTO commits (sha, date, file_name, author, changes, nloc) VALUES (?,?,?,?,?,?)",
-                        (_commit.hash, _commit.committer_date, com_element.new_path, _commit.author.name,
-                         cal_code_churn(_commit.hash, com_element.new_path), com_element.nloc))
+            if check_type_java(com_element.filename):
+                if com_element.change_type.name == "RENAME":
+                    cursor.execute('UPDATE commits SET file_name = "s%s" WHERE file_name = "s%s";' % (
+                        com_element.new_path, com_element.old_path))
                 else:
-                    cursor.execute(
-                        "INSERT INTO commits (sha, date, file_name, author, changes, nloc) VALUES (?,?,?,?,?,?)",
-                        (_commit.hash, _commit.committer_date, com_element.old_path, _commit.author.name,
-                         cal_code_churn(_commit.hash, com_element.old_path), com_element.nloc))
+                    if com_element.new_path is not None:
+                        cursor.execute(
+                            "INSERT INTO commits (sha, date, file_name, author, changes, nloc) VALUES (?,?,?,?,?,?)",
+                            (_commit.hash, _commit.committer_date, com_element.new_path, _commit.author.name,
+                             cal_code_churn(_commit.hash, com_element.new_path), com_element.nloc))
+                    else:
+                        cursor.execute(
+                            "INSERT INTO commits (sha, date, file_name, author, changes, nloc) VALUES (?,?,?,?,?,?)",
+                            (_commit.hash, _commit.committer_date, com_element.old_path, _commit.author.name,
+                             cal_code_churn(_commit.hash, com_element.old_path), com_element.nloc))
+            else:
+                continue
+            print("filename of file added", com_element.filename)
             conn.commit()
 
         # todo: remove this
@@ -185,19 +193,11 @@ def update_total_code_churn():
     conn.commit()
 
 
-def rm_cloned_repo_and_db(database, cloned_dir_name):
+def rm_cloned_repo_and_db(database):
     if os.path.exists(database):
         try:
             os.remove(database)
             print(f"{database} has been removed.")
-
-            if os.path.isdir(cloned_dir_name):
-                shutil.rmtree(cloned_dir_name)
-                print(f"{cloned_dir_name} directory has been removed.")
-
-            elif os.path.exists(cloned_dir_name):
-                os.remove(cloned_dir_name)
-                print(f"{cloned_dir_name} has been removed.")
 
         except Exception as e:
             print(f"Error removing: {e}")
@@ -206,15 +206,42 @@ def rm_cloned_repo_and_db(database, cloned_dir_name):
         print(f"{database} does not exist in the current directory.")
 
 
+def virtualize_db():
+
+    # Connect to the SQLite database
+    conn = sqlite3.connect("db_commits_files.db")
+
+    # List of your table names
+    tables = ['commits','auth_contib', 'file_author_contrib', 'file_legacy_complexity']
+
+
+    # Create a Pandas Excel writer using XlsxWriter as the engine.
+    with pd.ExcelWriter('database_tables_visualizer.xlsx', engine='xlsxwriter') as writer:
+        for table in tables:
+            # Read the table content into a DataFrame
+            df = pd.read_sql_query(f"SELECT * from {table}", conn)
+
+            # Write the DataFrame to an Excel sheet
+            df.to_excel(writer, sheet_name=table, index=False)
+
+    # Close the database connection
+    conn.close()
+
+    print("Excel file has been created successfully!")
 
 
 
 if __name__ == "__main__":
 
+
     database = "db_commits_files.db"
+
     # should be changed to lead to the path of the clonned repo which is the tool
     # ROOT_DIRECTORY = (subprocess.run('pwd', shell=True, capture_output=True, text=True)).stdout
     cloned_repo_path, gone_authors, cloned_dir_name = read_args_terminal.read_args_terminal()
+
+    # the db is being deleted at the beginning and later remade for testing purposes
+    rm_cloned_repo_and_db(database)
 
     ROOT_DIRECTORY = os.getcwd()
 
@@ -231,24 +258,28 @@ if __name__ == "__main__":
     # if you want to limit the number of commits for analysing, you can specify the value
     # the var commits is an array of el that contain data about each commit, 1 el = 1 commit
     commits = islice(Repository(cloned_repo_path).traverse_commits(), 5000)
-
-    for commit in commits:
-        print(commit.author)
-
-    # for com in commits:
-    #     print(com.hash)
-
     # otherwise use this command
     # commits = Repository(local_repo_path).traverse_commits()
 
-    # update_table_commits(commits)
-    # update_total_code_churn()
+    #################### UNIT TEST ###############
+    # # -check if all commits are captured
+    # for commit in commits:
+    #     print(commit.author.name)
+    # for com in commits:
+    #     print(com.hash)
+
+    update_table_commits(commits)
+    update_total_code_churn()
 
     if gone_authors is None:
         gone_authors = find_gone_authors(cursor)
 
-    # find_all_files(cloned_repo_path, gone_authors, ROOT_DIRECTORY)
-    # get_data_from_db(cursor)
+
+
+
+    find_all_files(cloned_repo_path, gone_authors, ROOT_DIRECTORY, conn)
+    get_data_from_db(cursor)
     conn.close()
+    virtualize_db()
     # rm_cloned_repo_and_db(database, cloned_dir_name)
 

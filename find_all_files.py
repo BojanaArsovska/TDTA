@@ -7,11 +7,12 @@ import os
 # gone_contributors = ['stephenconnolly', 'cactusman', 'dwdyer', 'jglick']
 
 # connect to database
-conn = sqlite3.connect('db_commits_files.db')
-cursor = conn.cursor()
-counter = 0
+global conn
+global cursor
+global counter
 
-def drop_duplicate_rows():
+def drop_duplicate_rows(conn):
+    cursor = conn.cursor()
     cursor.execute("""
     CREATE TABLE temp_table AS 
     SELECT DISTINCT * FROM file_legacy_complexity
@@ -43,51 +44,41 @@ def find_currently_exisitng_files(directory):
 
 
 # calculate the total contribution of all authors in the list for a file
+# This function will return a dictionary where the keys are the authors and the values are their total contribution percentages.
 def authors_contrib(gone_contributors, auth_percentage):
-    total_contrib_percentage = 0
     prev_author = None
-    author_contributions = []
+    author_contributions = dict()
 
     for auth_perc in auth_percentage:
         author = auth_perc[0]
-        percent_contrib_author = auth_perc[1]
+        author_contrib_percentage = auth_perc[1]
+        # works ^
 
         if author in gone_contributors:
-            if percent_contrib_author is not None:
-                if prev_author is not None and prev_author != author:
-                    # Store the total contribution of the previous author
-                    author_contributions.append((prev_author,total_contrib_percentage))
-                    # Reset the total contribution for the new author
-                    total_contrib_percentage = 0
-
-                total_contrib_percentage += auth_perc[1]
-                prev_author = author
-
-
+            if author_contrib_percentage is not None:
+                if (prev_author is not None) and prev_author == author:
+                    author_contributions[author] += author_contrib_percentage
+                else:
+                    author_contributions[author] = author_contrib_percentage
     return author_contributions
-    # if author_contributions is [] thant menas the name fo the author if that file was not found in the list of gone authors
-# This function will return a dictionary where the keys are the authors and the values are their total contribution percentages. The function keeps track of the previous author and when it detects a change in the author, it stores the total contribution of the previous author and resets the total contribution for the new author.
 
 
 # updates file_legacy_complexity table with columns(files, file_name, legacy_percentage, cog_complexity) with all the gathered info
 # gone_authors_contib
-def update_table_tot_legacy_contrib(file, gone_authors_contib, cog_complexity):
+def update_table_tot_legacy_contrib(file, authors_and_contib, cog_complexity, conn):
+    cursor = conn.cursor()
+    for author, contrib in authors_and_contib.items():
+        # print(author, contrib)
+        # ^ works
 
-    for author_contrib in gone_authors_contib:
-        try:
-            author, contrib = author_contrib
-        except:
-            print("author_contrib", author_contrib)
-        # gone_authors_contib are now This function will return a dictionary where the keys are the authors and the values are their total contribution percentages. The function keeps track of the previous author and when it detects a change in the author, it stores the total contribution of the previous author and resets the total contribution for the new author.
-        # cursor.execute("ALTER TABLE file_legacy_complexity ADD COLUMN author text")
         cursor.execute("INSERT INTO file_legacy_complexity (file_name, author, legacy_percentage, cog_complexity) VALUES (?,?,?,?)",
                                    (file, author, contrib, cog_complexity))
         conn.commit()
 
 
 # Loops through all directories and subdirectories to find all files
-def find_all_files(root_directory, gone_contributors, ROOT_DIRECTORY):
-    # print("gone_contributors find all files",gone_contributors)
+def find_all_files(root_directory, gone_contributors, ROOT_DIRECTORY, conn):
+    cursor = conn.cursor()
     root_directory = root_directory + "/"
     counter = 0
 
@@ -99,6 +90,8 @@ def find_all_files(root_directory, gone_contributors, ROOT_DIRECTORY):
     # fetch all exisiting files
     cursor.execute('SELECT DISTINCT file_name FROM file_author_contrib;')
     file_list = cursor.fetchall()
+    # all files added
+    # print(file_list)
 
     for file in file_list:
         counter += 1
@@ -107,31 +100,20 @@ def find_all_files(root_directory, gone_contributors, ROOT_DIRECTORY):
 
         file = file[0]
 
-        # the biggest optimization ive done in my life
-        # Check if the file ends with .java
-        print("checking if this ends in .java", file)
-        if not file.endswith('.java'):
-            print("no \n ")
-            continue  # Skip to the next iteration if the file is not a .java file
-        else:
-            print("yes \n ")
-
+        # this returns authors and their contribution percentages for each file, expected output is
         cursor.execute('SELECT author, percentages FROM file_author_contrib WHERE file_name = "%s";' %(file))
-
-        contrib_percentage = cursor.fetchall()
+        author_and_percentage = cursor.fetchall()
         cog_complexity = get_cognitive_complexities(file, root_directory, ROOT_DIRECTORY)
-        # print("print(file, cog_complexity)", file, cog_complexity)
-        authors_n_contrib = authors_contrib(gone_contributors, contrib_percentage)
+        authors_n_contrib = authors_contrib(gone_contributors, author_and_percentage)
+
 
        # sometimes authors_n_contrib is empty because the authors of the file are not in the list of formed developers
-        # print("(gone_contributors, contrib_percentage)", (gone_contributors, contrib_percentage))
+        # print("(gone_contributors, author_and_percentage)", (gone_contributors, author_and_percentage))
 
-        # the biggest optimization ive done in my life
         if authors_n_contrib != []:
-            update_table_tot_legacy_contrib(file, authors_n_contrib, cog_complexity)
+            update_table_tot_legacy_contrib(file, authors_n_contrib, cog_complexity, conn)
 
-        # print("gone_authors_contrib(gone_contributors, contrib_percentage)  ", authors_n_contrib(gone_contributors, contrib_percentage))
-    drop_duplicate_rows()
+    drop_duplicate_rows(conn)
 
 
 # find_all_files("/Users/bojanaarsovska/TDtool/jenkins", ['stephenconnolly', 'cactusman', 'dwdyer', 'jglick'] )

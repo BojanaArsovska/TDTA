@@ -15,7 +15,7 @@ def get_data_from_db(cursor):
     result2 = cursor.fetchall()
 
     # Convert result2 to dataframe for better view
-    df2 = pd.DataFrame(result2, columns=['ID', 'File Name', 'Author', 'Legacy', 'Cognitive Complexity'] )
+    df2 = pd.DataFrame(result2, columns=['ID', 'File Name', 'Author', 'Contribution', 'Cognitive Complexity'] )
 
     # Save the results into CSV files
     df1.to_csv('table1.csv', index=False)
