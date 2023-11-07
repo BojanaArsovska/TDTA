@@ -1,4 +1,4 @@
-Author,File Name,Number of Edits,Author Edits/Commits on the file 
+Author,File Name,Code Churn - Total number of lines added/deleted/edited,Author Edits/Commits with the file 
 546669204,app/src/main/java/com/example/administrator/webot/TestHook.java,855,1
 Jarvanh,app/src/main/java/com/example/administrator/webot/MySocket.java,782,2
 546669204,app/src/test/java/com/example/administrator/webot/Test2.java,418,1

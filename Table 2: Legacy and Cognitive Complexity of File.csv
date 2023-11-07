@@ -1,0 +1,20 @@
+ID,File Name,Author,Contribution,Cognitive Complexity
+3,app/src/main/java/com/example/administrator/webot/HookLoader.java,546669204,1.0,7.333333333333333
+10,app/src/main/java/com/example/administrator/webot/MySocketClient.java,546669204,1.0,2.5
+12,app/src/main/java/com/example/administrator/webot/MySocketService.java,546669204,1.0,4.5
+13,app/src/main/java/com/example/administrator/webot/MySocketServiceUDP.java,546669204,1.0,6.0
+14,app/src/main/java/com/example/administrator/webot/Protocl.java,546669204,1.0,4.0
+15,app/src/main/java/com/example/administrator/webot/TestHook.java,546669204,1.0,9.384615384615385
+18,app/src/test/java/com/example/administrator/webot/ExampleUnitTest.java,546669204,1.0,2.25
+19,app/src/test/java/com/example/administrator/webot/Test2.java,546669204,1.0,46.0
+1,app/src/androidTest/java/com/example/administrator/webot/ExampleInstrumentedTest.java,546669204,1.0,0.0
+2,app/src/main/java/com/example/administrator/webot/Config.java,546669204,1.0,0.0
+4,app/src/main/java/com/example/administrator/webot/MainActivity.java,546669204,1.0,0.0
+5,app/src/main/java/com/example/administrator/webot/MyApplication.java,546669204,1.0,0.0
+6,app/src/main/java/com/example/administrator/webot/MyService.java,546669204,0.8666666666666667,0.0
+7,app/src/main/java/com/example/administrator/webot/MyService.java,Jarvanh,0.13333333333333333,0.0
+8,app/src/main/java/com/example/administrator/webot/MySocket.java,546669204,0.5933503836317136,6.615384615384615
+9,app/src/main/java/com/example/administrator/webot/MySocket.java,Jarvanh,0.40664961636828645,6.615384615384615
+11,app/src/main/java/com/example/administrator/webot/MySocketClientUDP.java,546669204,1.0,0.0
+16,app/src/main/java/com/example/administrator/webot/openSQLite.java,546669204,0.9415584415584416,5.25
+17,app/src/main/java/com/example/administrator/webot/openSQLite.java,Jarvanh,0.05844155844155844,5.25
