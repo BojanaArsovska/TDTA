@@ -281,5 +281,5 @@ if __name__ == "__main__":
     get_data_from_db(cursor)
     conn.close()
     virtualize_db()
-    # rm_cloned_repo_and_db(database, cloned_dir_name)
+    rm_cloned_repo_and_db(database, cloned_dir_name)
 
