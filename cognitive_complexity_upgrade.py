@@ -20,10 +20,22 @@ def get_cognitive_complexities(filepath, root_directory, ROOT_DIRECTORY):
         output = result.stdout
         output = output.splitlines()
         for line in output:
-            counter += 1
-            method_complexity = line[(line.index(' of ') + 4) : (line.index(' of ') + 6)]
-            method_complexity = ''.join(filter(str.isdigit, method_complexity))
-            total_file_complexity += int(method_complexity)
+            try:
+                # Check if ' of ' is in the line and proceed if it is
+                if ' of ' in line:
+                    complexity_start_index = line.index(' of ') + 4  # Start index of complexity
+                    complexity_end_index = line.find(' ', complexity_start_index)  # End index of complexity
+                    if complexity_end_index == -1:  # If no space is found, assume end of line
+                        complexity_end_index = len(line)
+                    method_complexity = line[complexity_start_index:complexity_end_index]
+                    method_complexity = ''.join(filter(str.isdigit, method_complexity))
+                    total_file_complexity += int(method_complexity)
+                    counter += 1
+            except ValueError as e:
+                # Handle the exception if ' of ' is not found or any other ValueError
+                print(f"An error occurred while processing the line: {line}")
+                print(f"Error details: {e}")
+
     else:
         total_file_complexity = 0
 
