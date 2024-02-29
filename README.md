@@ -16,7 +16,7 @@ python3 main.py -g  <link to a repository you want to analyse> -t <txt file>
 
 Sample
 ```bash
-python3 main.py -g  https://github.com/jenkinsci/jenkins.git -t dead_authors.txt
+python3 main.py -g  https://github.com/jenkinsci/jenkins.git -t gone_authors.txt
 ```
 
 
