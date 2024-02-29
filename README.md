@@ -9,7 +9,7 @@
 ```bash
 python3 main.py -g  <link to a repository you want to analyse> 
 ```
-Alternatively, run the command with the -t flag
+Alternatively, run the command with the -fd flag
 ```bash
 python3 main.py -g  <link to a repository you want to analyse> -fd <txt file>
 ```
