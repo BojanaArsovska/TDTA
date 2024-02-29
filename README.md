@@ -11,12 +11,12 @@ python3 main.py -g  <link to a repository you want to analyse>
 ```
 Alternatively, run the command with the -t flag
 ```bash
-python3 main.py -g  <link to a repository you want to analyse> -t <txt file>
+python3 main.py -g  <link to a repository you want to analyse> -fd <txt file>
 ```
 
 Sample
 ```bash
-python3 main.py -g  https://github.com/jenkinsci/jenkins.git -t gone_authors.txt
+python3 main.py -g  https://github.com/jenkinsci/jenkins.git -fd gone_authors.txt
 ```
 
 
