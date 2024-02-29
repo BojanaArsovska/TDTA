@@ -35,7 +35,8 @@ def get_cognitive_complexities(filepath, root_directory, ROOT_DIRECTORY):
                 # Handle the exception if ' of ' is not found or any other ValueError
                 print(f"An error occurred while processing the line: {line}")
                 print(f"Error details: {e}")
-
+    elif result.returncode != 0:
+        print("An error has occurred while running the pmd command. Ensure that pmd is installed properly on the system by following the instructions on installing pmd in the README.md")
     else:
         total_file_complexity = 0
 
