@@ -1,2 +1,3 @@
 PyDriller~=2.5
 pmd
+xlsxwriter
