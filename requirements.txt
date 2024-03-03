@@ -1,4 +1,4 @@
 PyDriller~=2.6
-pmd
 xlsxwriter
-git 
+git
+GitPython
