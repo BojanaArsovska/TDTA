@@ -16,7 +16,7 @@ def get_data_from_db(cursor):
     cursor.execute("SELECT file_name, SUM(ABS(changes)) AS SCORE, COUNT(author) AS COUNT FROM commits GROUP BY file_name ORDER BY SUM(changes) DESC")
     result1_2 = cursor.fetchall()
     # Convert result1 to dataframe for better view
-    df1_1 = pd.DataFrame(result1_1, columns=['Author', 'File', 'Number of Edits by <Author>', 'Number of Commits by <Author> including<File>'])
+    df1_1 = pd.DataFrame(result1_1, columns=['Author', 'File', 'Number of Edits by <Author>', 'Number of Commits by <Author> which include <File>'])
     df1_2 = pd.DataFrame(result1_2, columns=['File Name', 'Code Churn - Total number of lines added/deleted/edited', 'Author Edits/Commits with the file '])
 
     # Execute the second query
