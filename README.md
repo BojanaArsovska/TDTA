@@ -48,7 +48,7 @@ Before you can install PMD, PyDriller, and other Python modules, make sure your 
 
 PMD is an open-source static source code analyzer. Follow these steps to install it:
 
-1. Download the PMD 'pmd-dist-<latest_version>-bin.zip' file from the official [PMD GitHub Releases page](https://github.com/pmd/pmd/releases).
+1. Download and unzip the PMD 'pmd-dist-<latest_version>-bin.zip' file from the official [PMD GitHub Releases page](https://github.com/pmd/pmd/releases).
 2. Extract the .zip file to your desired location.
 3. Add the `bin` directory from the extracted PMD folder to your system's PATH. 
    
