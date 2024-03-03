@@ -1,3 +1,4 @@
-PyDriller~=2.5
+PyDriller~=2.6
 pmd
 xlsxwriter
+git 
