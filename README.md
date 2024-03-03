@@ -63,19 +63,20 @@ PMD is an open-source static source code analyzer. Follow these steps to install
    
    For macOS/Linux:
    - Open Terminal.
-   - Open the bash profile with the command `nano ~/.bash_profile` for Mac or `nano ~/.bashrc` for Linux.
+   - Run `nano ~/.bashrc` for Linux
+   - For Mac, open your shell's start-up file (.zshrc, .bashrc, .profile, etc). Which start-up file to choose depends on the shell envrionment that you are using. For instance, in Z Shell (zsh) you would run the command `nano ~/.zshrc`, in Bash, `nano ~/.bash_profile`. 
    - Add the line `export PATH=$PATH:/path-to-pmd-bin-directory` to the end of the file.
-   - Save and close the file (Ctrl+X, then Y, then Enter).
-   - Enter the command `source ~/.bash_profile` for Mac or `source ~/.bashrc` for Linux to refresh the profile.
+   - Save your changes and close the file.
+   - Enter the command `source ~/.your_start-up_file` to refresh the profile (and to load your new path variable).
 4. Verify your installation by running `pmd` in your command prompt or terminal. If PMD is correctly installed, this will not return an error.
+
+Important to note: Make sure you add PMD in the correct start-up file, otherwise it will not be added to the path once you restart your shell.
 
 ## Installing PyDriller
 
 PyDriller is a Python framework for mining software repositories. To install it, follow these steps:
 
-1. Go to the [PyDriller page on PyPI](https://pypi.org/project/PyDriller/).
-2. Make sure you’re on a page with the latest version.
-3. Open your terminal and run the following command:
+1. Open your terminal and run the following command:
 
    ```bash
    pip install PyDriller
@@ -162,4 +163,4 @@ The corresponding SQL queries to create and update these tables are available in
 
 Remember to replace `/path-to-pmd-bin-directory` with the actual path to your PMD bin directory.
 
-WARNING: This tool only analyses the commits done on a branch that is locally cloned with the repository. If you'd like to analyse multiple branches, you must clone them locally.
+WARNING: This tool only analyses the commits done on a branch that is locally cloned with the repository. If you'd like to analyse multiple branches, you must clone them locally as well.
