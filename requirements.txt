@@ -1,4 +1,3 @@
 PyDriller~=2.6
 xlsxwriter
-git
 GitPython
