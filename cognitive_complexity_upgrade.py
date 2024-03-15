@@ -7,15 +7,15 @@ def get_cognitive_complexities(filepath, root_directory, ROOT_DIRECTORY):
     counter = 0
     total_file_complexity = 0
 
-    # Calculate the cognitive complexity of the Java file
+    # Calculate the cognitive complexity of a Java file
     # Don't forget to write in your thesis how much time parsing this and cutting it and combining it with different sources took.
 
     cmd = 'pmd check -f text -R ' + str(ROOT_DIRECTORY) + '/cogcomp.xml -d ' + str(root_directory + filepath)
     result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+    #todo: clean the pmd checks in rest of the code
 
     # total_file_complexity = Sum (complexities of all methods in a file) / num od methods
-    # '' == result.stdout when the tool cannot find the complexity it gives a result one of the 3
-
+    # When the tool cannot find the complexity it returns one of the 3 possibilities bellow
     if ' ' != result.stdout and '' != result.stdout and None != result.stdout:
         output = result.stdout
         output = output.splitlines()
@@ -35,8 +35,11 @@ def get_cognitive_complexities(filepath, root_directory, ROOT_DIRECTORY):
                 # Handle the exception if ' of ' is not found or any other ValueError
                 print(f"An error occurred while processing the line: {line}")
                 print(f"Error details: {e}")
-    elif result.returncode != 0:
+    elif result.returncode != 0 and "pmd: command not found" in result.stderr:
         print("An error has occurred while running the pmd command. Ensure that pmd is installed properly on the system by following the instructions on installing pmd in the README.md")
+        print(result.stderr)
+
+        # return -1
     else:
         total_file_complexity = 0
 

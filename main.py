@@ -8,15 +8,41 @@ from pydriller import *
 from pydriller.metrics.process.code_churn import CodeChurn
 import read_args_terminal
 from results_fetcher import get_data_from_db
-from find_all_files import find_gone_authors, find_all_files
-import time_script
+from find_all_files import former_contributors, find_all_files
 import subprocess
 import sqlite3
 import pandas as pd
 import xlsxwriter
 from check_if_java_file import check_type_java
+from pathlib import Path
 
-# this is never called for some reason
+def find_currently_exisitng_files(directory):
+
+    directory_path = Path(directory)
+    file_list = []
+
+    # Recursive function to traverse directories
+    def traverse_dir(current_dir):
+        # Iterate over each item in the current directory
+        for item in current_dir.iterdir():
+            # Skip items that start with '.'
+            if item.name.startswith('.'):
+                continue
+
+            # If the item is a directory, recurse into it
+            if item.is_dir():
+                traverse_dir(item)
+            # If the item is a file, add it to the file_list
+            elif item.is_file():
+                item.replace(ROOT_DIRECTORY, '')
+                file_list.append(str(item))
+
+    # Start the traversal from the root directory
+    traverse_dir(directory_path)
+    return file_list
+
+
+
 
 def get_commit_shas():
     repo = git.Repo(cloned_repo_path)
@@ -70,25 +96,39 @@ def cal_code_churn(commit_sha, file_name):
 #     return metric
 
 
-
-
-
 def update_table_commits(commits):
     counter = 0
     for _commit in commits:
 
         counter += 1
         for com_element in _commit.modified_files:
+            # the same way we are checking is a file is java file, we could have been testing if iot is in the repository still or it has been removed
+            # while this sounds like a good plan, the problem is that we can't know if the file has been renamed later, so by default file that has one name
+            # gets renamed later, will be classified as unexisiting file and will not be added to the database
             if check_type_java(com_element.filename):
                 if com_element.change_type.name == "RENAME":
-                    cursor.execute('UPDATE commits SET file_name = "s%s" WHERE file_name = "s%s";' % (
-                        com_element.new_path, com_element.old_path))
+                    cursor.execute('UPDATE commits SET file_name = (?) WHERE file_name = (?);', (com_element.new_path, com_element.old_path))
+                    conn.commit()
+
+                # Here we delete all the files from the database that were deleted in the repository
+                elif com_element.change_type.name == "DELETE":
+                    cursor.execute('DELETE from commits WHERE file_name = (?);', (str(com_element.old_path),))
+                    conn.commit()
+
                 else:
+                    # every file has a new path property when it appears for the first time in a the commits and a old part property which is None
+                    # this property gets updated every time a file is modified
+                    # when the file is modified, old path becomes new path and new path stays the same
+                    # when a file is renamed the new path becomes and old path and the old path variable takes the path of the renamed file
+                    # if the modification type is delete
+                    # then the new path property becomes None and the old path takes the value from the new path
+                    #
                     if com_element.new_path is not None:
                         cursor.execute(
                             "INSERT INTO commits (sha, date, file_name, author, changes, nloc) VALUES (?,?,?,?,?,?)",
                             (_commit.hash, _commit.committer_date, com_element.new_path, _commit.author.name,
                              cal_code_churn(_commit.hash, com_element.new_path), com_element.nloc))
+
                     else:
                         cursor.execute(
                             "INSERT INTO commits (sha, date, file_name, author, changes, nloc) VALUES (?,?,?,?,?,?)",
@@ -96,7 +136,6 @@ def update_table_commits(commits):
                              cal_code_churn(_commit.hash, com_element.old_path), com_element.nloc))
             else:
                 continue
-            print("filename of file added", com_element.filename)
             conn.commit()
 
         # todo: remove this
@@ -104,9 +143,7 @@ def update_table_commits(commits):
             print(counter)
 
 
-
-
-# calculates the code churn of files in the given commit
+# Calculates the code churn of files in the given commit
 def update_total_code_churn():
     # file_churns = total_code_churn()
     # file_churns = total_code_churn().count()
@@ -193,27 +230,19 @@ def update_total_code_churn():
     conn.commit()
 
 
-def rm_cloned_repo_and_db(database):
+def rm_db(database):
     if os.path.exists(database):
         try:
             os.remove(database)
-            print(f"{database} has been removed.")
-
         except Exception as e:
             print(f"Error removing: {e}")
-
     else:
         print(f"{database} does not exist in the current directory.")
 
 
 def virtualize_db():
-
-    # Connect to the SQLite database
     conn = sqlite3.connect("db_commits_files.db")
-
-    # List of your table names
     tables = ['commits','auth_contib', 'file_author_contrib', 'file_legacy_complexity']
-
 
     # Create a Pandas Excel writer using XlsxWriter as the engine.
     with pd.ExcelWriter('database_tables_visualizer.xlsx', engine='xlsxwriter') as writer:
@@ -223,25 +252,26 @@ def virtualize_db():
 
             # Write the DataFrame to an Excel sheet
             df.to_excel(writer, sheet_name=table, index=False)
-
-    # Close the database connection
     conn.close()
-
     print("Excel file has been created successfully!")
 
+def invalid_pmd():
+    result = subprocess.run("pmd", shell=True, capture_output=True, text=True)
+    return ("pmd: command not found" in result.stderr)
 
 
 if __name__ == "__main__":
 
+    if invalid_pmd():
+        print("An error has occurred while running the pmd command. Ensure that pmd is installed properly on the system by following the instructions on installing pmd in the README.md")
+        exit()
 
     database = "db_commits_files.db"
 
-    # should be changed to lead to the path of the clonned repo which is the tool
-    # ROOT_DIRECTORY = (subprocess.run('pwd', shell=True, capture_output=True, text=True)).stdout
-    cloned_repo_path, gone_authors, cloned_dir_name = read_args_terminal.read_args_terminal()
+    cloned_repo_path, former_developers, cloned_dir_name = read_args_terminal.read_args_terminal()
 
-    # the db is being deleted at the beginning and later remade for testing purposes
-    rm_cloned_repo_and_db(database)
+    # the db is being deleted at the beginning and later remade
+    rm_db(database)
 
     ROOT_DIRECTORY = os.getcwd()
 
@@ -255,31 +285,25 @@ if __name__ == "__main__":
     # open the local repository
     repo = git.Repo(cloned_repo_path)
 
-    # if you want to limit the number of commits for analysing, you can specify the value
-    # the var commits is an array of el that contain data about each commit, 1 el = 1 commit
+    # The 5000 value limits the number of commits for analysing
+    # The var commits is an array of el that contains data about each commit, 1 el = 1 commit
     commits = islice(Repository(cloned_repo_path).traverse_commits(), 5000)
-    # otherwise use this command
+    # To remove the limit on the number of commits traversed, uncomment the line below and comment the line above
     # commits = Repository(local_repo_path).traverse_commits()
-
-    #################### UNIT TEST ###############
-    # # -check if all commits are captured
-    # for commit in commits:
-    #     print(commit.author.name)
-    # for com in commits:
-    #     print(com.hash)
 
     update_table_commits(commits)
     update_total_code_churn()
 
-    if gone_authors is None:
-        gone_authors = find_gone_authors(cursor)
+    if former_developers is None:
+        former_developers = former_contributors(cursor)
 
+    if find_all_files(cloned_repo_path, former_developers, ROOT_DIRECTORY, conn) == -1:
+        print("The analysis will be discontinued due to an error.")
+        conn.close()
+        rm_db(database)
+        exit()
 
-
-
-    find_all_files(cloned_repo_path, gone_authors, ROOT_DIRECTORY, conn)
     get_data_from_db(cursor)
     conn.close()
     virtualize_db()
-    # rm_cloned_repo_and_db(database, cloned_dir_name)
 

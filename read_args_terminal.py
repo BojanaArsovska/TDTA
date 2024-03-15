@@ -50,7 +50,6 @@ def parsing_dir_name_through_args(args):
     return repo_name
 
 
-
 def read_args_terminal():
     parser = argparse.ArgumentParser(description='Process link to a repository and a txt file of ex employee authors (Name Surname).')
     parser.add_argument('-g', '--git', type=str, help='Link to the git repository.')

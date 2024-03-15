@@ -6,6 +6,14 @@ def get_data_from_db(cursor):
     cursor.execute("SELECT author, file_name, SUM(changes) AS SCORE, COUNT(author) AS COUNT FROM commits GROUP BY author, file_name ORDER BY SUM(changes) DESC")
     result1_1 = cursor.fetchall()
 
+
+    # Set the pandas display options
+    pd.set_option('display.max_columns', None)  # Ensure all columns are displayed
+    pd.set_option('display.max_rows', None)  # Ensure all rows are displayed (use with caution for very large DataFrames)
+    pd.set_option('display.max_colwidth', None)  # Ensure full width of columns, especially important for long strings
+    pd.set_option('display.width', None)  # Use the maximum width of the terminal
+
+
 # COUNT(*) AS COMMIT_COUNT third column, counts the
     # number of commits for each file_name. The author column
     # has been removed because it cannot be included without
