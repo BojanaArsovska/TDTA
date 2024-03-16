@@ -142,7 +142,7 @@ def update_table_commits(commits):
 
         # todo: remove this
         if counter % 100 == 0:
-            print(counter)
+            print(counter, " commits analysed.")
 
 
 # Calculates the code churn of files in the given commit
