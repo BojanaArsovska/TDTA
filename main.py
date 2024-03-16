@@ -15,6 +15,8 @@ import pandas as pd
 import xlsxwriter
 from check_if_java_file import check_type_java
 from pathlib import Path
+import warnings
+
 
 def find_currently_exisitng_files(directory):
 
@@ -265,6 +267,9 @@ if __name__ == "__main__":
     if invalid_pmd():
         print("An error has occurred while running the pmd command. Ensure that pmd is installed properly on the system by following the instructions on installing pmd in the README.md")
         exit()
+
+    # Suppressing sqlite3 warning about datetime objects by ignoring DeprecationWarning messages related to the sqlite3 module's default datetime adapter arising from indirect usage within other libraries
+    warnings.filterwarnings("ignore", category=DeprecationWarning)
 
     database = "db_commits_files.db"
 
