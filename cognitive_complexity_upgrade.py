@@ -44,7 +44,7 @@ def get_cognitive_complexities(filepath, root_directory, ROOT_DIRECTORY):
         total_file_complexity = 0
 
     # print(result)
-    if counter is not 0:
+    if counter != 0:
         return total_file_complexity/counter
     else:
         return total_file_complexity
