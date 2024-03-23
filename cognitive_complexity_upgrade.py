@@ -21,6 +21,7 @@ def get_cognitive_complexities(filepath, root_directory, ROOT_DIRECTORY):
         output = output.splitlines()
         for line in output:
             try:
+                #  There may be a more elegant solution for this, however, I cannot find a non-Java API that can be used to fetch the PMD results.
                 # Check if ' of ' is in the line and proceed if it is
                 if ' of ' in line:
                     complexity_start_index = line.index(' of ') + 4  # Start index of complexity
