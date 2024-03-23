@@ -108,7 +108,7 @@ def find_all_files(cloned_repo_path, former_contributors, ROOT_DIRECTORY, conn):
         if counter % 50 == 0:
             print(f'Done {str(counter)} files out of {str(len(existing_files))}')
 
-        # this returns authors and their contribution percentages for each file, expected output is
+        # This returns authors and their contribution percentages for each file
         cursor.execute('SELECT author, percentages FROM file_author_contrib WHERE file_name = (?);', (str(file),))
 
         author_and_percentage = cursor.fetchall()
